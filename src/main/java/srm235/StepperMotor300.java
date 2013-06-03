@@ -96,6 +96,58 @@ package srm235;
  */
 public class StepperMotor300 {
     public int rotateToNearest(int n, int current, int[] target) {
-	return 0;
+        // Step 1 normalize the initial step value and each target
+        System.out.print("Old current : "+current);
+        current = current%n;
+        if(current <0)
+            current=n+current;
+        System.out.println(", current normalized : "+current);
+
+        for (int i=0; i<target.length;i++) {
+            System.out.print("Old target["+i+"] : "+target[i]);
+            target[i]=target[i]%n;
+            if(target[i]<0)
+                target[i]=n+target[i];
+            System.out.println(", normalized target["+i+"] : "+target[i]);
+        }
+
+        int minValue=n;
+        int minIndex=0;
+        int step, antistep;
+        boolean negative=false;
+
+        for (int i=0; i<target.length;i++) {
+            System.out.print("testing position : "+i);
+            if(current == target[i])
+                return 0;
+            // Check positive move
+            if(current < target[i]) {
+                step = target[i] -current;
+            } else {
+                step = n-current+target[i];
+            }
+
+            // Check negative move
+            if(target[i]<current) {
+                antistep = current - target[i];
+            } else {
+                antistep = current+n-target[i];
+            }
+            System.out.println(", one way : "+step+", other way : "+antistep);
+            if(step==0 || antistep ==0) return 0;
+
+            if(antistep<minValue) {
+                minValue=antistep;
+                negative=true;
+            }
+            if(step<=minValue) {
+                minValue=step;
+                negative = false;
+            }
+        }
+        if(negative)
+            return 0-minValue;
+        else return minValue;
+
     }
 }
